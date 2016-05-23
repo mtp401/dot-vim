@@ -121,11 +121,20 @@ let g:syntastic_javascript_eslint_exec = 'eslint_d'
 " pip install vim-vint to install vint
 let g:syntastic_vim_checkers = ['vint']
 
-" apt-get install ghc cabal && cabal update && cabal install shellcheck
+" Ubuntu: apt-get install ghc cabal && cabal update && cabal install shellcheck
+" Fedora: dnf install cabal-install ghc-Cabal-devel && cabal install shellcheck
 let g:syntastic_sh_checkers = ['shellcheck']
 
 " npm install -g js-yaml
 let g:syntastic_yaml_checkers = ['jsyaml']
+
+" gem install mdl
+let g:syntastic_markdown_checkers = ['mdl']
+
+let g:syntastic_cpp_checkers = ['gcc']
+
+let g:syntastic_cpp_compiler = 'g++'
+let g:syntastic_cpp_compiler_options = '-std=c++11'
 
 let g:syntastic_check_on_wq = 0
 let g:syntastic_check_on_open = 1
@@ -167,7 +176,7 @@ let g:airline#extensions#branch#enabled = 1
 " change the text for when no branch is detected
 let g:airline#extensions#branch#empty_message = ''
 
-"truncate long branch names to a fixed length
+" truncate long branch names to a fixed length
 let g:airline#extensions#branch#displayed_head_limit = 10
 
 " vim-polyglot uses tpope/vim-markdown, plasticboy is better
@@ -177,7 +186,6 @@ let g:polyglot_disabled = ['markdown']
 let g:vim_markdown_folding_disabled = 1
 
 " neovim stuff
-
 if has('nvim')
     " remap terminal buffer escape to escape key
     tnoremap <Esc> <C-\><C-n>
