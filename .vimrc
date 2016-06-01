@@ -8,12 +8,11 @@ set tabstop=8
 set shiftwidth=4
 set softtabstop=4
 set tw=79
-set formatoptions+=t
+set fo+=t
 set number
 set ruler
 set hlsearch
 set bs=2
-set fo-=t
 set t_Co=256
 set clipboard=unnamedplus
 
@@ -94,7 +93,7 @@ endif
 
 filetype plugin on
 
-" Make gq wrap long blocks
+" Make gq wrap long blocks in Latex
 map \gq ?^$\\|^\s*\(\\begin\\|\\end\\|\\label\)?1<CR>gq//-1<CR>
 omap lp ?^$\\|^\s*\(\\begin\\|\\end\\|\\label\)?1<CR>//-1<CR>.<CR>
 
