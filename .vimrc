@@ -103,6 +103,9 @@ let g:vimpager_scrolloff = 0
 autocmd FileType yaml,html.handlebars,markdown setlocal
     \ shiftwidth=2 tabstop=2 softtabstop=2
 
+" Use real tabs in makefiles
+autocmd FileType make setlocal noexpandtab sw=4 ts=4 sts=4
+
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -130,7 +133,10 @@ let g:syntastic_yaml_checkers = ['jsyaml']
 " gem install mdl
 let g:syntastic_markdown_checkers = ['mdl']
 
-let g:syntastic_cpp_checkers = ['gcc']
+let g:syntastic_cpp_checkers = ['gcc', 'cpplint']
+
+let g:syntastic_cpp_cpplint_exec = 'cpplint'
+let g:syntastic_cpp_cpplint_args = ''
 
 let g:syntastic_cpp_compiler = 'g++'
 let g:syntastic_cpp_compiler_options = '-std=c++11'
