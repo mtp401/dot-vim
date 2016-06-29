@@ -204,6 +204,9 @@ if has('nvim')
     nnoremap <A-j> <C-w>j
     nnoremap <A-k> <C-w>k
     nnoremap <A-l> <C-w>l
+
+    " true color support
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
 execute pathogen#infect()
