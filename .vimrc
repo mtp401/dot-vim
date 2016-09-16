@@ -114,7 +114,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_aggregate_errors = 1
 
 " Turn off flake8
-let g:syntastic_python_checkers = ['python', 'pylint']
+let g:syntastic_python_checkers = ['python', 'pylint', 'pep8']
 
 " Turn on eslint_d for js
 let g:syntastic_javascript_checkers = ['eslint']
@@ -133,13 +133,10 @@ let g:syntastic_yaml_checkers = ['jsyaml']
 " gem install mdl
 let g:syntastic_markdown_checkers = ['mdl']
 
-let g:syntastic_cpp_checkers = ['gcc', 'cpplint']
+let g:syntastic_cpp_checkers = ['cpplint', 'clang-tidy']
 
 let g:syntastic_cpp_cpplint_exec = 'cpplint'
 let g:syntastic_cpp_cpplint_args = ''
-
-let g:syntastic_cpp_compiler = 'g++'
-let g:syntastic_cpp_compiler_options = '-std=c++11'
 
 let g:syntastic_check_on_wq = 0
 let g:syntastic_check_on_open = 1
@@ -189,6 +186,14 @@ let g:polyglot_disabled = ['markdown']
 
 " Stop vim-markdown from autofolding markdown on every write
 let g:vim_markdown_folding_disabled = 1
+
+" Run Syntastic on F8
+inoremap <F8> :SyntasticCheck<CR>
+nnoremap <F8> :SyntasticCheck<CR>
+vnoremap <F8> :SyntasticCheck<CR>
+inoremap <F7> :call ToggleHighlightWSErrors()<CR>
+nnoremap <F7> :call ToggleHighlightWSErrors()<CR>
+vnoremap <F7> :call ToggleHighlightWSErrors()<CR>
 
 " neovim stuff
 if has('nvim')
