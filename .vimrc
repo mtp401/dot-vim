@@ -1,11 +1,13 @@
 " vint: -ProhibitSetNoCompatible
 set nocompatible
 set showmatch
-set esckeys
 set autoindent
+set esckeys
 set expandtab
 set tabstop=8
 set shiftwidth=4
+set splitbelow
+set splitright
 set softtabstop=4
 set tw=79
 set fo+=t
@@ -15,6 +17,8 @@ set hlsearch
 set bs=2
 set t_Co=256
 set clipboard=unnamedplus
+
+set listchars=trail:-,nbsp:+,eol:$,tab:>-
 
 syntax on
 
