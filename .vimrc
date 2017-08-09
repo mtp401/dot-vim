@@ -2,7 +2,11 @@
 set nocompatible
 set showmatch
 set autoindent
+
+if !has('nvim')
 set esckeys
+endif
+
 set expandtab
 set tabstop=8
 set shiftwidth=4
@@ -103,12 +107,9 @@ omap lp ?^$\\|^\s*\(\\begin\\|\\end\\|\\label\)?1<CR>//-1<CR>.<CR>
 
 let g:vimpager_scrolloff = 0
 
-" Use 2 space indents in yaml
-autocmd FileType yaml,html.handlebars,markdown setlocal
-    \ shiftwidth=2 tabstop=2 softtabstop=2
-
 " Use real tabs in makefiles
 autocmd FileType make setlocal noexpandtab sw=4 ts=4 sts=4
+autocmd FileType yaml setlocal sw=4 ts=4 sts=4
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
