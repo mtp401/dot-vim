@@ -202,6 +202,8 @@ inoremap <F7> :call ToggleHighlightWSErrors()<CR>
 nnoremap <F7> :call ToggleHighlightWSErrors()<CR>
 vnoremap <F7> :call ToggleHighlightWSErrors()<CR>
 
+let g:ycm_auto_trigger = 0
+
 " neovim stuff
 if has('nvim')
     " remap terminal buffer escape to escape key
