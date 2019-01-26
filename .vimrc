@@ -21,6 +21,11 @@ set hlsearch
 set bs=2
 set t_Co=256
 set clipboard=unnamedplus
+set undofile
+set undodir=~/.vim/undodir
+
+" LanguageClient/ALE
+set hidden
 
 set listchars=trail:-,nbsp:+,eol:$,tab:>-
 
@@ -78,12 +83,6 @@ function! ToggleHighlightWSErrors()
     call HighlightWSErrors(t:highlight_ws_errors)
 endfunction
 
-function! SetIndentation(spcs)
-    set tabstop=spcs
-    set softtabstop=spcs
-    set shiftwidth=spcs
-endfunction
-
 if has('cscope')
     cnoreabbrev <expr> csa
         \ ((getcmdtype() == ':' && getcmdpos() <= 4)? 'cs add'  : 'csa')
@@ -109,68 +108,12 @@ let g:vimpager_scrolloff = 0
 
 " Use real tabs in makefiles
 autocmd FileType make setlocal noexpandtab sw=4 ts=4 sts=4
-autocmd FileType yaml setlocal sw=4 ts=4 sts=4
 
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
+" Use host python when in virtualenvs
 let g:python_host_prog = '/usr/bin/python'
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_aggregate_errors = 1
-
-" Turn off flake8
-let g:syntastic_python_checkers = ['python', 'pylint', 'pep8']
-
-" Turn on eslint_d for js
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exec = 'eslint_d'
-
-" pip install vim-vint to install vint
-let g:syntastic_vim_checkers = ['vint']
-
-" Ubuntu: apt-get install ghc cabal && cabal update && cabal install shellcheck
-" Fedora: dnf install cabal-install ghc-Cabal-devel && cabal install shellcheck
-let g:syntastic_sh_checkers = ['shellcheck']
-
-" npm install -g js-yaml
-let g:syntastic_yaml_checkers = ['jsyaml']
-
-" gem install mdl
-let g:syntastic_markdown_checkers = ['mdl']
-
-let g:syntastic_cpp_checkers = ['cpplint', 'clang-tidy']
-
-let g:syntastic_cpp_cpplint_exec = 'cpplint'
-let g:syntastic_cpp_cpplint_args = ''
-
-let g:syntastic_check_on_wq = 0
-let g:syntastic_check_on_open = 1
-
-function! ToggleSyntastic(buf_path)
-    let b:syntastic_mode = 'passive'
-
-" Syntastic is off by default, this turns it on if a file named
-" '.enable_syntastic' is found in cwd or any ancestor directory
-
-python << EOF
-import vim
-import os.path
-
-current_path = os.path.normpath(vim.eval('a:buf_path'))
-
-while current_path != '/':
-    if os.path.isfile(os.path.join(current_path, '.enable_syntastic')):
-        vim.command('let b:syntastic_mode = "active"')
-        break
-
-    current_path = os.path.normpath(os.path.join(current_path, '..'))
-
-EOF
-endfunction
-
-autocmd BufReadPre * call ToggleSyntastic(expand('%:p:h'))
 
 " Fix airline statuses
 set laststatus=2
@@ -188,21 +131,42 @@ let g:airline#extensions#branch#empty_message = ''
 " truncate long branch names to a fixed length
 let g:airline#extensions#branch#displayed_head_limit = 10
 
+" Enable Airline integration with ALE
+let g:airline#extensions#ale#enabled = 1
+
 " vim-polyglot uses tpope/vim-markdown, plasticboy is better
 let g:polyglot_disabled = ['markdown']
 
 " Stop vim-markdown from autofolding markdown on every write
 let g:vim_markdown_folding_disabled = 1
 
-" Run Syntastic on F8
-inoremap <F8> :SyntasticCheck<CR>
-nnoremap <F8> :SyntasticCheck<CR>
-vnoremap <F8> :SyntasticCheck<CR>
 inoremap <F7> :call ToggleHighlightWSErrors()<CR>
 nnoremap <F7> :call ToggleHighlightWSErrors()<CR>
 vnoremap <F7> :call ToggleHighlightWSErrors()<CR>
 
-let g:ycm_auto_trigger = 0
+" scratch buffers
+" http://dhruvasagar.com/2014/03/11/creating-custom-scratch-buffers-in-vim
+function! ScratchEdit(cmd, options)
+    exe a:cmd tempname()
+    setl buftype=nofile bufhidden=wipe nobuflisted
+    if !empty(a:options) | exe 'setl' a:options | endif
+endfunction
+
+command! -bar -nargs=* Ssp call ScratchEdit('split', <q-args>)
+command! -bar -nargs=* Svsp call ScratchEdit('vsplit', <q-args>)
+
+function! SetIndentation(width)
+    let b:tabstop=a:width
+    let b:softtabstop=a:width
+    let b:shiftwidth=a:width
+endfunction
+
+function! SetLKStyle()
+    call SetIndentation(8)
+    setlocal noexpandtab
+endfunction
+
+command! SetLKStyle call SetLKStyle()
 
 " neovim stuff
 if has('nvim')
@@ -223,4 +187,47 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
-execute pathogen#infect()
+let g:ale_linters = {
+\   'rust': ['rls']
+\}
+
+let g:ale_fixers = {
+\   'rust': ['rustfmt']
+\}
+
+let g:ale_rust_rls_toolchain='stable'
+let g:ale_linters_explicit=1
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'w0rp/ale'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+Plug 'tpope/vim-fugitive'
+
+Plug 'godlygeek/tabular'
+
+" Syntax Plugins
+Plug 'plasticboy/vim-markdown'
+Plug 'mtp401/vim-cpp-enhanced-highlight', { 'branch': 'mpelland/custom' }
+Plug 'mesonbuild/meson', { 'rtp': 'data/syntax-highlighting/vim', 'for': 'meson' }
+Plug 'cespare/vim-toml'
+Plug 'stephpy/vim-yaml'
+Plug 'wgwoods/vim-systemd-syntax'
+Plug 'rust-lang/rust.vim'
+Plug 'vim-python/python-syntax'
+Plug 'uarun/vim-protobuf'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'vim-scripts/groovy.vim'
+Plug 'tpope/vim-git'
+Plug 'docker/docker', { 'rtp': 'contrib/syntax/vim' }
+Plug 'Glench/Vim-Jinja2-Syntax'
+
+call plug#end()
+
+" Some of the syntax files above reset the default indentation to 2 spaces
+autocmd FileType yaml setlocal sw=4 ts=4 sts=4
+autocmd FileType meson setlocal sw=4 ts=4 sts=4
+autocmd FileType proto setlocal sw=4 ts=4 sts=4
