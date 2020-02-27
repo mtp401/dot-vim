@@ -20,9 +20,10 @@ set ruler
 set hlsearch
 set bs=2
 set t_Co=256
-set clipboard=unnamedplus
+set clipboard^=unnamed,unnamedplus
 set undofile
 set undodir=~/.vim/undodir
+set mouse=
 
 " LanguageClient/ALE
 set hidden
@@ -106,8 +107,15 @@ omap lp ?^$\\|^\s*\(\\begin\\|\\end\\|\\label\)?1<CR>//-1<CR>.<CR>
 
 let g:vimpager_scrolloff = 0
 
-" Use real tabs in makefiles
+" Use real tabs in makefiles and kconfig
 autocmd FileType make setlocal noexpandtab sw=4 ts=4 sts=4
+autocmd FileType kconfig setlocal noexpandtab sw=4 ts=4 sts=4
+
+" Recognize `Config.in`s kconfig
+au! BufNewFile,BufRead Config.in setf kconfig
+
+" Automatically pick up rusty-tags
+autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
 
 set statusline+=%#warningmsg#
 set statusline+=%*
@@ -152,18 +160,12 @@ function! ScratchEdit(cmd, options)
     if !empty(a:options) | exe 'setl' a:options | endif
 endfunction
 
+" Open a scratch buffer in a split
 command! -bar -nargs=* Ssp call ScratchEdit('split', <q-args>)
 command! -bar -nargs=* Svsp call ScratchEdit('vsplit', <q-args>)
 
-function! SetIndentation(width)
-    let b:tabstop=a:width
-    let b:softtabstop=a:width
-    let b:shiftwidth=a:width
-endfunction
-
 function! SetLKStyle()
-    call SetIndentation(8)
-    setlocal noexpandtab
+    setlocal ts=8 sts=8 sw=8 noexpandtab
 endfunction
 
 command! SetLKStyle call SetLKStyle()
@@ -187,8 +189,31 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
+" if exists('+termguicolors')
+"   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+"   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+"   set termguicolors
+" endif
+
+" cpp:
+"   cpplint: `pip install --user cpplint`
+" gitcommit:
+"   gitlint: `pip install --user gitlint`
+" markdown:
+"   mdl: `gem install mdl`
+" sh:
+"   shellcheck: `cabal update; cabal install ShellCheck`
+" rust:
+"   rls: `rustup component add rls`
+" yaml:
+"   yamllint: `pip install --user yamllint`
 let g:ale_linters = {
-\   'rust': ['rls']
+\   'cpp': ['cpplint'],
+\   'gitcommit': ['gitlint'],
+\   'markdown': ['mdl'],
+\   'sh': ['shellcheck'],
+\   'rust': ['rls'],
+\   'yaml': ['yamllint'],
 \}
 
 let g:ale_fixers = {
