@@ -1,13 +1,14 @@
-# Matt's (neo)vim Setup
+# Matt's neovim Setup
 
 ## Installation
 
-1. `git clone <dot-vim> ~/.vim`
-2. `cd ~/.vim`
-3. `ln -s ~/.vim/.vimrc ~/.vimrc`
-
-For `neovim`:
-4. `ln -s ~/.vim ~/.config/nvim`
+1. `git clone <dot-vim> ~/.config/nvim`
+2. Open neovim and run `:PaqInstall` to install plugins.
+3. Run `:TSInstall <languages>` to install treesitter parsers for the languages
+   you care about. See `:TSModuleInfo` for the list of supported languages.
+    - **NOTE**: You may need to install the tree-sitter binary to install
+      languages based on upstream grammar files. See
+      [the tree-sitter release page](https://github.com/tree-sitter/tree-sitter/releases)
 
 ## Overview
 
@@ -15,16 +16,11 @@ I use [Chris Simpkins' _Hack_](https://github.com/chrissimpkins/Hack) font on a
 black background with darkish grey text. If you don't want to go through the
 effort of installing a custom font, I at least recommend using a monospaced
 font. Bitstream Vera Mono is a great choice and is present on most systems by
-default.
+default. For a lualine compatible version, see the version of Hack on
+[Nerd Fonts](https://www.nerdfonts.com).
 
-I use [vim-plug](https://github.com/junegunn/vim-plug) to manage the following
-plugins, which I've found to be the right combination of helpfulness without
-trying to make vim into an IDE:
-
-- [ALE](https://github.com/w0rp/ale)
-- [vim-airline](https://github.com/vim-airline/vim-airline)
-- [vim-fugitive](https://github.com/tpope/vim-fugitive)
-- [vim-markdown](https://github.com/plasticboy/vim-markdown)
+I use [paq](https://github.com/savq/paq-nvim) to manage plugins, so
+`:PaqUpdate` can be used to keep the plugins configured in `init.lua`
 
 ## Probably not so helpful notes
 
