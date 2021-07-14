@@ -81,7 +81,12 @@ require('material').set()
 paq({'kyazdani42/nvim-web-devicons', opt = true})
 paq({'hoob3rt/lualine.nvim'})
 require('lualine').setup({
-    options = {theme = 'material'}
+    options = {theme = 'material'},
+    sections = {
+        lualine_y = {
+            {'diagnostics', sources = {'nvim_lsp', 'ale'}}
+        }
+    }
 })
 
 paq({'neovim/nvim-lspconfig'})
@@ -97,6 +102,8 @@ vim.g.ale_linters = {
     sh = {'shellcheck'},  -- `cabal update; cabal install ShellCheck`
     yaml = {'yamllint'}  -- `pip install --user yamllint`
 }
+vim.g.ale_sh_shellcheck_options = '-x'
+vim.g.ale_sh_shellcheck_change_directory = 0
 paq({'w0rp/ale'})
 
 paq({'tpope/vim-fugitive'})
@@ -117,6 +124,13 @@ vim.g.vimpager_scrolloff = 0
 vim.api.nvim_command([[
     augroup ExpandTabsOverride
         autocmd! FileType make setlocal noexpandtab sw=4 ts=4 sts=4
-        autocmd! FileType kconfig setlocal noexpandtab sw=4 ts=4 sts=4
+        autocmd FileType kconfig setlocal noexpandtab sw=4 ts=4 sts=4
+    augroup END
+]])
+
+-- detect files named Config.in files as Kconfig
+vim.api.nvim_command([[
+    augroup DetectConfigInAsKConfig
+        autocmd! BufNewFile,BufRead Config.in setlocal filetype=kconfig
     augroup END
 ]])
