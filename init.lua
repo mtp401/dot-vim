@@ -86,13 +86,17 @@ require('nvim-treesitter.configs').setup({
         'cpp',
         'devicetree',
         'diff',
+        'disassembly',
         'dockerfile',
+        'editorconfig',
         'git_rebase',
         'gitcommit',
         'gitignore',
         'go',
+        'groovy',
         'javascript',
         'json',
+        'kconfig',
         'latex',
         'lua',
         'make',
@@ -103,6 +107,7 @@ require('nvim-treesitter.configs').setup({
         'passwd',
         'pem',
         'perl',
+        'promql',
         'proto',
         'python',
         'query',
@@ -170,14 +175,6 @@ paq({'glench/vim-jinja2-syntax'})
 paq({'nvim-lua/popup.nvim'})
 paq({'nvim-lua/plenary.nvim'})
 paq({'nvim-telescope/telescope.nvim'})
-
-paq({'dhananjaylatkar/cscope_maps.nvim'})
-require('cscope_maps').setup({
-    disable_maps = true,
-    cscope = {
-        picker = "telescope"
-    }
-})
 
 -- miscellaneous
 vim.g.vimpager_scrolloff = 0
