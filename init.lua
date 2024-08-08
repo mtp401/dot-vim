@@ -147,10 +147,18 @@ require('lualine').setup({
     }
 })
 
+local default_parallelism = vim.uv.available_parallelism()
+
 paq({'neovim/nvim-lspconfig'})
 local lspconfig = require('lspconfig')
 lspconfig.clangd.setup({
-    cmd = {'clangd', '--background-index', '--clang-tidy'}
+    cmd = {
+        'clangd',
+        '--background-index',
+        '-j', math.min(1, default_parallelism / 2),
+        '--limit-results=20000',
+        '--limit-references=20000'
+    }
 })
 lspconfig.rust_analyzer.setup({})
 
@@ -161,7 +169,7 @@ vim.g.ale_linters = {
     markdown = {'mdl'},  -- `gem install --user mdl`
     sh = {'shellcheck'},  -- `cabal update; cabal install --installdir=${HOME}/.local/bin ShellCheck`
     yaml = {'yamllint'},  -- `pipx install yamllint`
-    python = {'pylint'}  -- `pipux install pylint`
+    python = {'pylint'}  -- `pipx install pylint`
 }
 vim.g.ale_sh_shellcheck_options = '-x'
 vim.g.ale_sh_shellcheck_change_directory = 0
@@ -191,30 +199,6 @@ vim.api.nvim_create_autocmd(
         pattern = {'make', 'kconfig'},
         callback = function()
             vim.opt_local.expandtab = false
-        end
-    }
-)
-
--- some the syntax files set indents to 2, reset them to 4
-local set_indentation_back_to_four_augroup = vim.api.nvim_create_augroup(
-    'SetIndentationBackToFour',
-    {clear = true}
-)
-vim.api.nvim_create_autocmd(
-    'FileType',
-    {
-        group = set_indentation_back_to_four_augroup,
-        pattern = {
-            'make',
-            'kconfig',
-            'yaml',
-            'meson',
-            'proto'
-        },
-        callback = function()
-            vim.opt_local.shiftwidth = 4
-            vim.opt_local.tabstop = 4
-            vim.opt_local.softtabstop = 4
         end
     }
 )
