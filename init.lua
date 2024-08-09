@@ -89,6 +89,7 @@ require('nvim-treesitter.configs').setup({
         'disassembly',
         'dockerfile',
         'editorconfig',
+        'git_config',
         'git_rebase',
         'gitcommit',
         'gitignore',
@@ -107,6 +108,7 @@ require('nvim-treesitter.configs').setup({
         'passwd',
         'pem',
         'perl',
+        'printf',
         'promql',
         'proto',
         'python',
@@ -155,7 +157,7 @@ lspconfig.clangd.setup({
     cmd = {
         'clangd',
         '--background-index',
-        '-j', math.min(1, default_parallelism / 2),
+        '-j', math.max(1, default_parallelism / 2),
         '--limit-results=20000',
         '--limit-references=20000'
     }
