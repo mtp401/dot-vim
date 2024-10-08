@@ -2,3 +2,4 @@ nvim
 .netrwhist
 plugged
 undodir
+/lazy-lock.json

@@ -1,3 +1,6 @@
+-- plugins
+require('config.lazy')
+
 -- security
 vim.o.exrc = false  -- ignore ~/.exrc
 vim.o.secure = true  -- disallow local rc exec
@@ -65,130 +68,15 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
--- plugins
-vim.cmd('packadd paq-nvim')
-local paq = require('paq').paq
-
-paq({'savq/paq-nvim', opt = true})
-
-paq({'nvim-treesitter/nvim-treesitter'})
-require('nvim-treesitter.configs').setup({
-    folding = {enable = true},
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false
-    },
-    incremental_selection = {enable = true},
-    ensure_installed = {
-        'bash',
-        'c',
-        'comment',
-        'cpp',
-        'devicetree',
-        'diff',
-        'disassembly',
-        'dockerfile',
-        'editorconfig',
-        'git_config',
-        'git_rebase',
-        'gitcommit',
-        'gitignore',
-        'go',
-        'groovy',
-        'javascript',
-        'json',
-        'kconfig',
-        'latex',
-        'lua',
-        'make',
-        'markdown',
-        'markdown_inline',
-        'meson',
-        'ninja',
-        'passwd',
-        'pem',
-        'perl',
-        'printf',
-        'promql',
-        'proto',
-        'python',
-        'query',
-        'regex',
-        'rust',
-        'ssh_config',
-        'strace',
-        'toml',
-        'udev',
-        'vim',
-        'xml',
-        'yaml'
-    }
-})
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldenable = false
 
-paq({'norcalli/nvim-colorizer.lua'})
-require('colorizer').setup()
-
-paq({'marko-cerovac/material.nvim'})
-require('material').setup({
-    custom_colors = require('custom-material-colors').colors,
-    style = 'darker'
-})
 vim.cmd([[colorscheme material]])
 
-paq({'kyazdani42/nvim-web-devicons', opt = true})
-paq({'nvim-lualine/lualine.nvim'})
-require('lualine').setup({
-    options = {theme = 'material'},
-    sections = {
-        lualine_y = {
-            {'diagnostics', sources = {'nvim_diagnostic', 'ale'}}
-        }
-    }
-})
-
-local default_parallelism = vim.uv.available_parallelism()
-
-paq({'neovim/nvim-lspconfig'})
-local lspconfig = require('lspconfig')
-lspconfig.clangd.setup({
-    cmd = {
-        'clangd',
-        '--background-index',
-        '-j', math.max(1, default_parallelism / 2),
-        '--limit-results=20000',
-        '--limit-references=20000'
-    }
-})
-lspconfig.rust_analyzer.setup({})
-
-vim.g.ale_linters_explicit = 1
-vim.g.ale_linters = {
-    cpp = {'cpplint'},  -- `pipx install cpplint`
-    gitcommit = {'gitlint'},  -- `pipx install --include-deps gitlint`
-    markdown = {'mdl'},  -- `gem install --user mdl`
-    sh = {'shellcheck'},  -- `cabal update; cabal install --installdir=${HOME}/.local/bin ShellCheck`
-    yaml = {'yamllint'},  -- `pipx install yamllint`
-    python = {'pylint'}  -- `pipx install pylint`
-}
-vim.g.ale_sh_shellcheck_options = '-x'
-vim.g.ale_sh_shellcheck_change_directory = 0
-paq({'w0rp/ale'})
-
-paq({'tpope/vim-fugitive'})
-paq({'godlygeek/tabular'})
-paq({'martinda/Jenkinsfile-vim-syntax'})
-paq({'glench/vim-jinja2-syntax'})
-
-paq({'nvim-lua/popup.nvim'})
-paq({'nvim-lua/plenary.nvim'})
-paq({'nvim-telescope/telescope.nvim'})
-
--- miscellaneous
+-- -- miscellaneous
 vim.g.vimpager_scrolloff = 0
-
+ 
 -- use real tabs in Makefiles and Kconfig
 local expand_tabs_override_augroup = vim.api.nvim_create_augroup(
     'ExpandTabsOverride',
