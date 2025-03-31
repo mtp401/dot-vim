@@ -40,6 +40,7 @@ vim.opt.listchars = {
 vim.opt.termguicolors = true
 vim.opt.syntax = 'on'
 vim.opt.laststatus = 2
+vim.opt.colorcolumn = '80'
 
 -- windows
 vim.o.splitbelow = true
